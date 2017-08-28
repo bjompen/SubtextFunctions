@@ -35,22 +35,24 @@
             [int]$TextEndLine   = $x - 1
                              
 
-            $startTime = $timespan.Add( (($InputObject[($TimeLine)] -replace ',','.') -split ' ' )[0] )
-            $EndTime   = $timespan.Add( (($InputObject[($TimeLine)] -replace ',','.') -split ' ' )[2] )
-            $Duration  = $EndTime - $StartTime
+            $startTime = ((($InputObject[($TimeLine)] -replace ',','.').Replace(' ','')) -split '-->' )[0]
+            $EndTime   = ((($InputObject[($TimeLine)] -replace ',','.').Replace(' ','')) -split '-->' )[1]
             $Text      = $inputObject[$TextStartLine..$textEndLine]
 
-            [array]$Output += New-Object -TypeName psobject -Property @{
+            [array]$Output += [SubTextLine]::new($($InputObject[$ReadLine]),$startTime,$EndTime,$Text)
+            <#[array]$Output += New-Object -TypeName psobject -Property @{
                 'Line'      = [int]$InputObject[$ReadLine]
                 'StartTime' = [timespan]$startTime
                 'EndTime'   = [timespan]$EndTime
                 'Duration'  = [timespan]$Duration
                 'text'      = [string[]]$Text
-            }
+            }#>
 
             $ReadLentgh = $x + 1
+            Write-Verbose "TextEndLine: $TextEndLine"
+            Write-Verbose "Length: $Length"
         }
-        until ($ReadLentgh -ge $Length)
+        until (($TextEndLine + 2) -ge $Length)
         
     }
     End

@@ -26,7 +26,12 @@
     }
 
     [String]ToString() {
-        Return "$($This.Line)`n$($This.StartTime) --> $($This.endTime)`n$($This.text)`n"
+        [String]$outString = "$($This.Line)`n$($This.StartTime) --> $($This.endTime)"
+        0..($This.text.Count -1) | ForEach-Object -Process {
+            [String]$outString = "$($outString)`n$($_)$($This.text[$_])`n"
+        }
+        [String]$outString = "$($outString)`n"
+        Return $outString
     }
 }
 

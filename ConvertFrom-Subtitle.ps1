@@ -1,7 +1,7 @@
 ﻿function ConvertFrom-Subtitle
 {
     [CmdletBinding()]
-    [OutputType([psobject])]
+    [OutputType([array])]
     Param
     (
         [Parameter(Mandatory=$true,
@@ -12,9 +12,9 @@
 
     Begin
     {
+        $InputObject = $InputObject.trim()
         [int]$Length        = $InputObject.Length - 1
         [int]$ReadLentgh    = 0
-        [TimeSpan]$TimeSpan = New-TimeSpan
 
     }
     Process
@@ -40,23 +40,14 @@
             $Text      = $inputObject[$TextStartLine..$textEndLine]
 
             [array]$Output += [SubTextLine]::new($($InputObject[$ReadLine]),$startTime,$EndTime,$Text)
-            <#[array]$Output += New-Object -TypeName psobject -Property @{
-                'Line'      = [int]$InputObject[$ReadLine]
-                'StartTime' = [timespan]$startTime
-                'EndTime'   = [timespan]$EndTime
-                'Duration'  = [timespan]$Duration
-                'text'      = [string[]]$Text
-            }#>
 
             $ReadLentgh = $x + 1
-            Write-Verbose "TextEndLine: $TextEndLine"
-            Write-Verbose "Length: $Length"
         }
         until (($TextEndLine + 2) -ge $Length)
         
     }
     End
     {
-        $Output
+        [SubText]::New($Output)
     }
 }

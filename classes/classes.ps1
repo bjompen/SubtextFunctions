@@ -26,23 +26,40 @@
     }
 
     [String]ToString() {
-        Return "$($This.Line)`n$($This.StartTime) --> $($This.endTime)`n$($This.text)`n`n"
+        Return "$($This.Line)`n$($This.StartTime) --> $($This.endTime)`n$($This.text)`n"
     }
 }
 
 class SubText {
     [SubTextLine[]]$Lines
 
-    SubText ([SubTextLine]$lines) {
+    SubText ([SubTextLine[]]$lines) {
         foreach ($Line in $lines) { 
             $This.Lines += $line
         }
     }
 
-    [void]AddSeconds([timespan]$seconds) {
+    [void]AddSeconds([int]$seconds) {
+        $seconds = $seconds * 10000000
         for ($i = 0; $i -lt $this.Lines.Length; $i++) {
-            $this.Lines[$i].StartTime.Add($seconds)
-            $this.Lines[$i].EndTime.Add($seconds)
+            $this.Lines[$i].StartTime = $this.Lines[$i].StartTime.Add($seconds)
+            $this.Lines[$i].EndTime = $this.Lines[$i].EndTime.Add($seconds)
         }
+    }
+
+    [void]AddMilliseconds([int]$Milliseconds) {
+        $Milliseconds = $Milliseconds * 1000
+        for ($i = 0; $i -lt $this.Lines.Length; $i++) {
+            $this.Lines[$i].StartTime = $this.Lines[$i].StartTime.Add($Milliseconds)
+            $this.Lines[$i].EndTime = $this.Lines[$i].EndTime.Add($Milliseconds)
+        }
+    }
+
+    [string[]]ToString() {
+        [string[]]$stringObj = @()
+        for ($i = 0; $i -lt $this.Lines.Length; $i++) {
+            $stringObj += $this.Lines[$i].ToString()
+        }
+        return $stringObj    
     }
 }

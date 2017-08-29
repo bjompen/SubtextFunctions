@@ -1,7 +1,7 @@
 ﻿function ConvertFrom-Subtitle
 {
     [CmdletBinding()]
-    [OutputType([array])]
+    [OutputType([SubText])]
     Param
     (
         [Parameter(Mandatory=$true,

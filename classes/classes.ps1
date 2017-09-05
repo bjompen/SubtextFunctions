@@ -26,9 +26,9 @@
     }
 
     [String]ToString() {
-        [String]$outString = "$($This.Line)`n$($This.StartTime) --> $($This.endTime)"
+        [String]$outString = "$($This.Line)`n$($This.StartTime.ToString('hh\:mm\:ss\,fff')) --> $($This.endTime.ToString('hh\:mm\:ss\,fff'))"
         0..($This.text.Count -1) | ForEach-Object -Process {
-            [String]$outString = "$($outString)`n$($_)$($This.text[$_])`n"
+            [String]$outString = "$($outString)`n$($This.text[$_])"
         }
         [String]$outString = "$($outString)`n"
         Return $outString
@@ -52,6 +52,22 @@ class SubText {
         }
     }
 
+    [void]AddSeconds([int]$seconds,[int]$StartLine) {
+        $seconds = $seconds * 10000000
+        for ($i = ($StartLine -1); $i -lt $this.Lines.Length; $i++) {
+            $this.Lines[$i].StartTime = $this.Lines[$i].StartTime.Add($seconds)
+            $this.Lines[$i].EndTime = $this.Lines[$i].EndTime.Add($seconds)
+        }
+    }
+
+    [void]AddSeconds([int]$seconds,[int]$StartLine,[int]$EndLine) {
+        $seconds = $seconds * 10000000
+        for ($i = ($StartLine -1); $i -lt ($EndLine -1); $i++) {
+            $this.Lines[$i].StartTime = $this.Lines[$i].StartTime.Add($seconds)
+            $this.Lines[$i].EndTime = $this.Lines[$i].EndTime.Add($seconds)
+        }
+    }
+
     [void]AddMilliseconds([int]$Milliseconds) {
         $Milliseconds = $Milliseconds * 1000
         for ($i = 0; $i -lt $this.Lines.Length; $i++) {
@@ -60,6 +76,20 @@ class SubText {
         }
     }
 
+    [void]AddMilliseconds([int]$Milliseconds,[int]$StartLine) {
+        $Milliseconds = $Milliseconds * 1000
+        for ($i = ($StartLine -1); $i -lt $this.Lines.Length; $i++) {
+            $this.Lines[$i].StartTime = $this.Lines[$i].StartTime.Add($Milliseconds)
+            $this.Lines[$i].EndTime = $this.Lines[$i].EndTime.Add($Milliseconds)
+        }
+    }
+    [void]AddMilliseconds([int]$Milliseconds,[int]$StartLine,[int]$EndLine) {
+        $Milliseconds = $Milliseconds * 1000
+        for ($i = ($StartLine -1); $i -lt ($EndLine -1); $i++) {
+            $this.Lines[$i].StartTime = $this.Lines[$i].StartTime.Add($Milliseconds)
+            $this.Lines[$i].EndTime = $this.Lines[$i].EndTime.Add($Milliseconds)
+        }
+    }
     [string[]]ToString() {
         [string[]]$stringObj = @()
         for ($i = 0; $i -lt $this.Lines.Length; $i++) {
